@@ -1,15 +1,15 @@
 import numpy as np
 from scipy.misc import imread
-from os import listdir
 from sklearn.preprocessing import MinMaxScaler
 
 
 # pass the name of the folder containing the image files into this function
 # along with the number of images as an integer and the images' 3D shape as a
 # tuple to get a tuple of the format (X_train, X_test, y_train, y_test)
-def create_dataset(directory_name, num_imgs, input_shape):
+def create_dataset(directory_name, num_imgs, input_shape, test_data_filename):
     dataset = load_and_process_data(directory_name, num_imgs, input_shape)
-    return make_training_and_testing_sets(dataset, num_imgs)
+    test_data = load_and_process_test_data(test_data_filename)
+    return make_training_and_testing_sets(dataset, num_imgs, test_data)
 
 
 def load_and_process_data(directory_name, num_imgs, input_shape):
@@ -19,13 +19,8 @@ def load_and_process_data(directory_name, num_imgs, input_shape):
 
     # iterates over files in the image_data folder and loads them, skipping
     # files that aren't images
-    i = 0
-    for filename in listdir(directory_name):
-        try:
-            dataset[i] = imread("%s/%s" % (directory_name, filename))
-            i += 1
-        except IOError:
-            print("Unable to load data from %s" % filename)
+    for i in range(0, num_imgs):
+        dataset[i] = imread("%s/hand.mov_%s.png" % (directory_name, i))
 
     # reshapes the data to a 2D array and applies the MinMaxScaler
     num_pixels = input_shape[0] * input_shape[1] * input_shape[2]
@@ -41,15 +36,47 @@ def load_and_process_data(directory_name, num_imgs, input_shape):
     return dataset
 
 
-def make_training_and_testing_sets(dataset, num_imgs):
+def load_and_process_test_data(test_data_filename):
+    # opens the file containing the data and creates an empty list to hold the
+    # data
+    file = open(test_data_filename, "r")
+    test_data = []
+
+    # iterates over the lines in the file, removing unnecessary characters and
+    # converting all "class scores" to either 0 or 1 based on whether the
+    # finger is "on or off"
+    for line in file:
+        processed_line = line.split(",")[1].strip(" ;\n").split(" ")
+
+        for i in range(len(processed_line)):
+            processed_line[i] = 1 if int(processed_line[i]) > 0 else 0
+            test_data.append(processed_line)
+
+    return test_data
+
+
+def make_training_and_testing_sets(dataset, num_imgs, test_data):
     # produce arrays made up of approx. 80% of the input and approx. 20% of the
     # input, respectively
     training_size = int(np.floor(num_imgs * .8))
-    X_train = np.array(dataset[0: training_size])
-    X_test = np.array(dataset[training_size: len(dataset)])
+    X_train = np.array(dataset[0:training_size])
+    X_test = np.array(test_data[0:training_size])
 
     # produce output arrays using length and dimensions of the input arrays
-    y_train = np.zeros(shape=X_train.shape)
-    y_test = np.zeros(shape=X_test.shape)
+    y_train = np.array(dataset[training_size:len(dataset)])
+    y_test = np.array(test_data[training_size:len(dataset)])
 
     return (X_train, X_test, y_train, y_test)
+
+
+# for testing
+
+# directory_name = "image_data"
+# num_imgs = 10
+# input_shape = (360, 360, 3)
+# test_data_filename = "data.txt"
+#
+#
+# (X_train, X_test, y_train, y_test) = create_dataset(directory_name, num_imgs,
+#                                                     input_shape,
+#                                                     test_data_filename)

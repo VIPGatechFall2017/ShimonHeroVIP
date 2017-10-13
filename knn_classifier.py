@@ -3,14 +3,15 @@ from data_processing import create_dataset
 
 # constants
 directory_name = "image_data"
-num_imgs = 12
+num_imgs = 10
 input_shape = (360, 360, 3)
-test_data = []
+test_data_filename = "data.txt"
 k = 5
 
 
 (X_train, X_test, y_train, y_test) = create_dataset(directory_name, num_imgs,
-                                                    input_shape, test_data)
+                                                    input_shape,
+                                                    test_data_filename)
 
 
 def train(X_train, y_train):
