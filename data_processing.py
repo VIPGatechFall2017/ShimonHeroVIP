@@ -51,7 +51,8 @@ def load_and_process_test_data(test_data_filename):
 
         for i in range(len(processed_line)):
             processed_line[i] = 1 if int(processed_line[i]) > 0 else 0
-            test_data.append(processed_line)
+
+        test_data.append(processed_line)
 
     return test_data
 
