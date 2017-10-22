@@ -16,7 +16,7 @@ labels = numpy.load('./labels.npy')
 num_classes = labels.shape[1]
 def baseline_model():
     model = Sequential()
-    model.add(Conv2D(16, (4, 4), input_shape=(1, 28, 28), activation='relu'))
+    model.add(Conv2D(16, (4, 4), input_shape=(1, 128, 128), activation='relu'))
     model.add(MaxPooling2D(pool_size=(2, 2)))
     model.add(Dropout(0.1))
     model.add(Conv2D(8, (4, 4), activation='relu'))
@@ -30,7 +30,7 @@ def baseline_model():
     model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
     return model
 model = baseline_model()
-model.fit(images, labels, validation_split=0.1, epochs=10, batch_size=100, verbose=2)
+model.fit(images, labels, validation_split=0.1, epochs=20, batch_size=200, verbose=2)
 model_json = model.to_json()
 with open("model.json", "w") as json_file:
     json_file.write(model_json)
