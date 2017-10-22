@@ -4,8 +4,9 @@ from sklearn.preprocessing import MinMaxScaler
 
 
 # pass the name of the folder containing the image files into this function
-# along with the number of images as an integer and the images' 3D shape as a
-# tuple to get a tuple of the format (X_train, X_test, y_train, y_test)
+# along with the number of images as an integer, the images' 3D shape as a
+# tuple, and the name of the file containing the raw data to get a tuple of the
+# format (X_train, X_test, y_train, y_test)
 def create_dataset(directory_name, num_imgs, input_shape, test_data_filename):
     dataset = load_and_process_data(directory_name, num_imgs, input_shape)
     test_data = load_and_process_test_data(test_data_filename)
@@ -60,10 +61,11 @@ def make_training_and_testing_sets(dataset, num_imgs, test_data):
     # input, respectively
     training_size = int(np.floor(num_imgs * .8))
     X_train = np.array(dataset[0:training_size])
-    X_test = np.array(test_data[0:training_size])
+    X_test = np.array(dataset[training_size:len(dataset)])
 
-    # produce output arrays using length and dimensions of the input arrays
-    y_train = np.array(dataset[training_size:len(dataset)])
+    # produce arrays containing the data from the text file using length and
+    # dimensions of the input arrays
+    y_train = np.array(test_data[0:training_size])
     y_test = np.array(test_data[training_size:len(dataset)])
 
     return (X_train, X_test, y_train, y_test)

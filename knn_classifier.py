@@ -1,5 +1,7 @@
 import numpy as np
+from collections import Counter
 from data_processing import create_dataset
+
 
 # constants
 directory_name = "image_data"
@@ -25,15 +27,23 @@ def predict(X_train, y_train, x_test, k):
     for i in range(len(X_train)):
         # compute euclidean distance between the observation and all of the
         # data points in the training set
-        distance = np.sqrt(np.sum(np.square(x_test - X_train[i, :])))
-        print(distance)
+        distance = np.sqrt(np.sum(np.square(x_test - X_train[i])))
 
         # add it to the list of distances
-        distances.append(distance)
+        distances.append([distance, i])
 
-    # sort the list so that it will be easy to find each data points nearest
+    # sort the list so that it will be easy to find each data point's nearest
     # neighbors
     distances = sorted(distances)
 
+    # make a list of the k neighbors' targets
+    for i in range(k):
+        index = distances[i][1]
+        print("%sth index: %s" % (i, index))
+        targets.append(y_train[index])
 
-predict(X_train, y_train, X_test[1, :], k)
+    # return the most common target
+    return Counter(targets).most_common(1)[0][0]
+
+
+predict(X_train, y_train, X_test[1], k)
