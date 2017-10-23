@@ -4,10 +4,11 @@ from data_processing import create_dataset
 
 # constants
 directory_name = "image_data"
-num_imgs = 300
+num_imgs = 7140
 input_shape = (360, 360, 3)
 test_data_filename = "data.txt"
-k = 10
+k = 3
+predictions = []
 
 
 (X_train, X_test, y_train, y_test) = create_dataset(directory_name, num_imgs,
@@ -46,4 +47,18 @@ def predict(X_train, y_train, x_test, k):
     return counts_to_targets[np.amax(counts)]
 
 
-print(predict(X_train, y_train, X_test[1, :], k))
+def knn(X_train, y_train, X_test, predictions, k):
+    # train on the input data
+    train(X_train, y_train)
+
+    # loop over all observations
+    for i in range(len(X_test)):
+        predictions.append(predict(X_train, y_train, X_test[i, :], k))
+
+
+# for testing
+
+# knn(X_train, y_train, X_test, predictions, k)
+# predictions = np.asarray(predictions)
+# accuracy = accuracy_score(y_test, predictions)
+# print("\nThe accuracy of our classifier is {0}%".format(accuracy*100))
