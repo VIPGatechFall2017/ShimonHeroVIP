@@ -1,6 +1,6 @@
 import numpy as np
 from data_processing import create_dataset
-
+from sklearn.metrics import accuracy_score
 
 # constants
 directory_name = "image_data"
@@ -58,7 +58,7 @@ def knn(X_train, y_train, X_test, predictions, k):
 
 # for testing
 
-# knn(X_train, y_train, X_test, predictions, k)
-# predictions = np.asarray(predictions)
-# accuracy = accuracy_score(y_test, predictions)
-# print("\nThe accuracy of our classifier is {0}%".format(accuracy*100))
+knn(X_train, y_train, X_test, predictions, k)
+predictions = np.asarray(predictions)
+accuracy = accuracy_score(y_test, predictions)
+print("\nThe accuracy of our classifier is {0}%".format(accuracy*100))
