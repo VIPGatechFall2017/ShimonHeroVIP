@@ -4,15 +4,16 @@ from sklearn.metrics import accuracy_score
 
 # constants
 directory_name = "image_data"
-num_imgs = 7140
+num_imgs = 1000
 input_shape = (360, 360, 3)
+resize_shape = (28, 28)
 test_data_filename = "data.txt"
-k = 3
+k = 5
 predictions = []
 
 
 (X_train, X_test, y_train, y_test) = create_dataset(directory_name, num_imgs,
-                                                    input_shape,
+                                                    input_shape, resize_shape,
                                                     test_data_filename)
 
 
@@ -57,8 +58,8 @@ def knn(X_train, y_train, X_test, predictions, k):
 
 
 # for testing
-
-knn(X_train, y_train, X_test, predictions, k)
-predictions = np.asarray(predictions)
-accuracy = accuracy_score(y_test, predictions)
-print("\nThe accuracy of our classifier is {0}%".format(accuracy*100))
+#
+# knn(X_train, y_train, X_test, predictions, k)
+# predictions = np.asarray(predictions)
+# accuracy = accuracy_score(y_test, predictions)
+# print("\nThe accuracy of our classifier is {0}%".format(accuracy*100))
