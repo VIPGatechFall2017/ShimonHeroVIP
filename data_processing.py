@@ -4,6 +4,7 @@ from resizeimage import resizeimage
 from scipy.misc import imread
 from skimage.color import rgb2grey
 from sklearn.preprocessing import MinMaxScaler
+from skimage import transform
 
 
 # pass the name of the folder containing the image files into this function
@@ -66,7 +67,7 @@ def load_and_process_test_data(test_data_filename):
         processed_line = line.split(",")[1].strip(" ;\n").split(" ")
 
         for i in range(len(processed_line)):
-            processed_line[i] = 1 if int(processed_line[i]) > 0 else 0
+            processed_line[i] = 1 if int(processed_line[i]) > 0.5 else 0
 
         test_data.append(processed_line)
 
