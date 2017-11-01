@@ -1,10 +1,7 @@
 import numpy as np
-from PIL import Image
-from resizeimage import resizeimage
 from scipy.misc import imread
 from skimage.color import rgb2grey
-from sklearn.preprocessing import MinMaxScaler
-from skimage import transform
+from skimage.transform import resize
 
 
 # pass the name of the folder containing the image files into this function
@@ -30,25 +27,17 @@ def load_and_process_data(directory_name, num_imgs, input_shape, resize_shape):
     for i in range(0, num_imgs):
         dataset[i] = imread("%s/hand.mov_%s.png" % (directory_name, i))
 
-    # reshape the data to a 2D array and apply the MinMaxScaler
-    num_pixels = input_shape[0] * input_shape[1] * input_shape[2]
-    processing_shape = (num_imgs, num_pixels)
-    dataset = np.reshape(dataset, newshape=processing_shape)
-    scaler = MinMaxScaler()
-    scaler.fit(dataset)
-    dataset = scaler.transform(dataset)
-
-    # reshapes the dataset back to a 4D array
-    dataset = np.reshape(dataset, newshape=dataset_shape)
+    # scale each entry in the dataset by 255 to get each value between 0 and 1
+    dataset = dataset / 255
 
     # determine the new shape of the dataset in preparation for downsampling
     # the images, iterate over the images, converting to grayscale and
     # downsampling, and then replace the old dataset with the new one
     new_shape = (num_imgs,) + resize_shape
     new_dataset = np.zeros(new_shape)
-    for i in range(len(dataset)):
-        new_dataset[i] = convert_to_grayscale_and_lower_dim(dataset[i],
-                                                            new_shape)
+    for i in range(0, num_imgs):
+        new_dataset[i] = convert_to_grayscale_and_downsample(dataset[i],
+                                                             resize_shape)
     dataset = new_dataset
 
     return dataset
@@ -74,17 +63,12 @@ def load_and_process_test_data(test_data_filename):
     return test_data
 
 
-def convert_to_grayscale_and_lower_dim(image, new_shape):
+def convert_to_grayscale_and_downsample(image, resize_shape):
     # convert to grayscale
     image = rgb2grey(image)
 
-    # convert the numpy array to a PIL image and then resize it to be smaller
-    image = Image.fromarray(image)
-    new_dim = [new_shape[1], new_shape[2]]
-    image = resizeimage.resize_thumbnail(image, new_dim)
-
-    # convert back to a numpy array
-    image = np.array(image.getdata()).reshape(tuple(new_dim))
+    # downsample image to 28x28
+    image = resize(image, resize_shape, preserve_range=True)
 
     return image
 
