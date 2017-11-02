@@ -25,17 +25,17 @@ To account for all possible combinations of the 6 individual finger states (all 
 ### Convolution
 For our model we used two 2D Convolutions, one with 16 filters and another with 8 filters. Both used kernal demensions of 4x4 and a Rectifier activation function.
 
-!(http://colah.github.io/posts/2014-07-Understanding-Convolutions/img/RiverTrain-ImageConvDiagram.png)
+![conv image](http://colah.github.io/posts/2014-07-Understanding-Convolutions/img/RiverTrain-ImageConvDiagram.png)
 
 ### Pooling
 After each convolution we downsized the results uding a max pooling size of 2x2. This helps our model train faster and avoid overfitting.
 
-!(https://qph.ec.quoracdn.net/main-qimg-8afedfb2f82f279781bfefa269bc6a90)
+![pooling image](https://qph.ec.quoracdn.net/main-qimg-8afedfb2f82f279781bfefa269bc6a90)
 
 ### Dropout
 We used a Dropout layer of .1 to minimize further overfitting and to help our model train faster.
 
-!(https://cambridgespark.com/content/tutorials/convolutional-neural-networks-with-keras/figures/drop.png)
+![dropout image](https://cambridgespark.com/content/tutorials/convolutional-neural-networks-with-keras/figures/drop.png)
 
 ### Model code
 ```python
