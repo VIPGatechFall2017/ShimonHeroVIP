@@ -2,12 +2,12 @@
 Vertically Integrated Projects (VIP) at GT for students working on ShimonHero
 
 ## Data Collection
-We collected our data in the lab using an ultrasound sensor and video recording on a mac. We used our own forearms for data collection. For all of our sessions, we collected data on finger extensions which resulted in a movie recording of the ultrasound images and a ```data.txt``` file with the following format:
+We collected our data in the lab using an ultrasound sensor and video recording on a mac. We used our own forearms for data collection. For all of our sessions, we collected data on finger extension and flexion which resulted in a movie recording of the ultrasound images and a ```data.txt``` file with the following format:
 ```
-Thumb Extension, Pointer Extension, Middle Extension, Ring Extensions, Pinky Extension
+Thumb Flexion, Pointer Flexion, Middle Flexion, Ring Flexion, Pinky Flexion
 ```
 
-We only recorded data for one finger being extended at a time. So, for example, the data point for thumb extension would be ```99,0,0,0,0``` showing that the thumb was fully extended while other fingers were not. We also collected data on no fingers extended which would look like ```0,0,0,0,0```.
+We only recorded data for one finger being flexed at a time. So, for example, the data point for thumb flexion would be ```99,0,0,0,0``` showing that the thumb was fully flexed while other fingers were not. We also collected data on no fingers flexed which would look like ```0,0,0,0,0```.
 
 After each session, the movie recording and the ```data.txt``` file were saved while recording the data collector's name, the date and time, and the folder location for the session's data.
 
@@ -16,4 +16,4 @@ Since we stored a video recording of the ultrasound images, the first part of ou
 
 We created another python script to take these images and resize them to ```128x128``` or ```28x28``` (depending on the model we're testing). These images were then converted to numpy arrays and stored into two arrays for the training and testing datasets (80/20 split).
 
-The finger extension data was converted to a vector of size six using one-hot encoding. The first five indices corresponded to each finger where a ```1``` indicated that that specific finger was extended. A ```1``` at the last index indicated that no fingers were extended. This encoded data was also stored into two arrays for the training and testing classification labels.
+The finger flexion data was converted to a vector of size six using one-hot encoding. The first five indices corresponded to each finger where a ```1``` indicated that that specific finger was extended. A ```1``` at the last index indicated that no fingers were extended. This encoded data was also stored into two arrays for the training and testing classification labels.
