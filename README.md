@@ -22,7 +22,17 @@ The finger flexion data was converted to a vector of size six using one-hot enco
 #### Classifier Type - CNN
 To account for all possible combinations of the 6 individual finger states (all five fingers or no fingers), a Convolutional Neural Network fits very well for the task at hand. 
 
-We converted each ultrasound video into individual images, representing 12 frames per second. So, for each five-minute video of collected data, we used 3600 images to classify each finger state. 
+#### Convolution
+For our model we used two 2D Convolutions, one with 16 filters and another with 8 filters. Both used kernal demensions of 4x4 and a Rectifier activation function.
+![alt text](http://colah.github.io/posts/2014-07-Understanding-Convolutions/img/RiverTrain-ImageConvDiagram.png)
+
+#### Pooling
+After each convolution we downsized the results uding a max pooling size of 2x2. This helps our model train faster and avoid overfitting.
+![alt text](https://qph.ec.quoracdn.net/main-qimg-8afedfb2f82f279781bfefa269bc6a90)
+
+#### Dropout
+We used a Dropout layer of .1 to minimize further overfitting and to help our model train faster.
+![alt text](https://cambridgespark.com/content/tutorials/convolutional-neural-networks-with-keras/figures/drop.png)
 
 #### Model code
 ```python
