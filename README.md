@@ -19,22 +19,25 @@ We created another python script to take these images and resize them to ```128x
 The finger flexion data was converted to a vector of size six using one-hot encoding. The first five indices corresponded to each finger where a ```1``` indicated that that specific finger was extended. A ```1``` at the last index indicated that no fingers were extended. This encoded data was also stored into two arrays for the training and testing classification labels.
 
 ## Model
-#### Classifier Type - CNN
+### Classifier Type - CNN
 To account for all possible combinations of the 6 individual finger states (all five fingers or no fingers), a Convolutional Neural Network fits very well for the task at hand. 
 
-#### Convolution
+### Convolution
 For our model we used two 2D Convolutions, one with 16 filters and another with 8 filters. Both used kernal demensions of 4x4 and a Rectifier activation function.
-![alt text](http://colah.github.io/posts/2014-07-Understanding-Convolutions/img/RiverTrain-ImageConvDiagram.png)
 
-#### Pooling
+!(http://colah.github.io/posts/2014-07-Understanding-Convolutions/img/RiverTrain-ImageConvDiagram.png)
+
+### Pooling
 After each convolution we downsized the results uding a max pooling size of 2x2. This helps our model train faster and avoid overfitting.
-![alt text](https://qph.ec.quoracdn.net/main-qimg-8afedfb2f82f279781bfefa269bc6a90)
 
-#### Dropout
+!(https://qph.ec.quoracdn.net/main-qimg-8afedfb2f82f279781bfefa269bc6a90)
+
+### Dropout
 We used a Dropout layer of .1 to minimize further overfitting and to help our model train faster.
-![alt text](https://cambridgespark.com/content/tutorials/convolutional-neural-networks-with-keras/figures/drop.png)
 
-#### Model code
+!(https://cambridgespark.com/content/tutorials/convolutional-neural-networks-with-keras/figures/drop.png)
+
+### Model code
 ```python
 from keras.models import Sequential
 from keras.layers import Dense
