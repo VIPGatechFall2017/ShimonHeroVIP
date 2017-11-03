@@ -1,6 +1,10 @@
 # ShimonHeroVIP
 Vertically Integrated Projects (VIP) at GT for students working on ShimonHero
 
+## Problem Introduction
+Our task was to design a convolutional neural network to classify finger flexion given ultrasound data of an arm. Each datapoint is a raw ultrasound image and a corresponding label representing which finger was flexed when the image was taken. We tried a plethora of different architectures with varying degrees of results. We trained our networks on data from one individual, due to the high variance of the images between arms. Our training accuracy reached as high as 80%, but even the simplest networks suffered from severe overfitting.
+![intro_image](https://github.com/VIPGatechFall2017/ShimonHeroVIP/blob/Jared/results/frame1.jpg)
+
 ## Data Collection
 We collected our data in the lab using an ultrasound sensor and video recording on a mac. We used our own forearms for data collection. For all of our sessions, we collected data on finger extension and flexion which resulted in a movie recording of the ultrasound images and a ```data.txt``` file with the following format:
 ```
@@ -78,3 +82,36 @@ with open("model.json", "w") as json_file:
 # serialize weights to HDF5
 model.save_weights("model.h5")
 ```
+
+## Results
+The training had rather modest results. We had major struggles with overfitting, as no matter what we did to the network and what the training was doing, the test accuracy would not increase. Going forward, we should attempt to identify underlying issues of the architecture, as decreasing its copmlexity proved to be mostly ineffective. Some of the models we tried are shown below.
+
+[model1](https://github.com/VIPGatechFall2017/ShimonHeroVIP/blob/Jared/results/Model%201.png)
+[model1-a](https://github.com/VIPGatechFall2017/ShimonHeroVIP/blob/Jared/results/Model%201%20-%20Analysis.jpg)
+Here, we had a large input size (128x128), so the network was trained for only 20 epochs. Right away, the overfitting can be seen. The training accuracy approaches 80% but the testing accuracy stays at approximately random guessing performance. Therefore, the model must be too complex as it doesn't generalize well. We started to combat this by reducing input size.
+
+[model2](https://github.com/VIPGatechFall2017/ShimonHeroVIP/blob/Jared/results/Model%202.png)
+[model2-a](https://github.com/VIPGatechFall2017/ShimonHeroVIP/blob/Jared/results/Model%202%20-%20Analysis.jpg)
+Given the smaller input size, we decided to train for 200 epochs rather than 20. The training accuracy was actually better than in the previous network, but the testing accuracy was still random. Therefore, more adjustments needed to be made.
+
+[model3](https://github.com/VIPGatechFall2017/ShimonHeroVIP/blob/Jared/results/Model%203.png)
+[model3-a](https://github.com/VIPGatechFall2017/ShimonHeroVIP/blob/Jared/results/Model%203%20-%20Analysis.jpg)
+Here, we are actually able to see the test data start to follow the curve of the training data, but we have unfortunately been unable to replicate these results. We plan on using this network as a starting point going forward to try to get the improve the testing data.
+
+[model4-a](https://github.com/VIPGatechFall2017/ShimonHeroVIP/blob/Jared/results/Model%204%20-%20Analysis.jpg)
+Model 4 is the same as model 3, but we moved to a larger dataset (3 sessions of data to 7). This data change also changed people, which is likely why the larger dataset actually performed worse on the same model. From this point forward, we used the larger dataset.
+
+[model5](https://github.com/VIPGatechFall2017/ShimonHeroVIP/blob/Jared/results/Model%205.png)
+[model5-a](https://github.com/VIPGatechFall2017/ShimonHeroVIP/blob/Jared/results/Model%205%20-%20Analysis.jpg)
+
+The training accuracies went down significantly in model 4, so for this model we considered increasing the convolution layer size. As expected, this slightly improved training accuracy, but obviously did not help testing accuracy.
+
+[model6](https://github.com/VIPGatechFall2017/ShimonHeroVIP/blob/Jared/results/Model%206.png)
+[model6-a](https://github.com/VIPGatechFall2017/ShimonHeroVIP/blob/Jared/results/Model%206%20-%20Analysis.jpg)
+
+In this model, an entire convolutional layer was removed to try to combat overfitting. The attempt was unsuccessful.
+
+[model7](https://github.com/VIPGatechFall2017/ShimonHeroVIP/blob/Jared/results/Model%207.png)
+[model7-a](https://github.com/VIPGatechFall2017/ShimonHeroVIP/blob/Jared/results/Model%207%20-%20Analysis.jpg)
+
+Decreasing the number of filters from 24 to 8 in the convolutional layer also had little effect on overfitting. We will be looking into the cause of this overfitting using the data that we've gathered to try to pinpoint a cause. 
