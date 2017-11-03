@@ -3,7 +3,7 @@ import os
 from PIL import Image
 import scipy.misc
 
-SHAPE = (128, 128)
+SHAPE = (28, 28)
 
 data_dir = './data/'
 data = []
@@ -11,7 +11,7 @@ imageFiles = [data_dir + file for file in os.listdir(data_dir) if file.endswith(
 for i, imageFile in enumerate(imageFiles):
     im = Image.open(imageFile).convert('LA')
     im = im.resize(SHAPE, Image.ANTIALIAS)
-    if i % 1000 == 0: im.show()
+    #if i % 1000 == 0: im.show()
     imageData = [point[0] for point in list(im.getdata())]
     imageDataArr = numpy.asarray(imageData)
     data.append(numpy.reshape(imageDataArr, (1,) + SHAPE).astype('float32') / 255)
@@ -27,7 +27,7 @@ with open(data_dir + 'data.txt') as labelfile:
             label[5] = 1
         else:
             label[rawvalues.index(max(rawvalues))] = 1
-        if i % 1000 == 0: print(label)
+        #if i % 1000 == 0: print(label)
         labels.append(label)
 
 """
@@ -47,8 +47,12 @@ data = [balanced_data[index] for index in indices]
 labels = [balanced_labels[index] for index in indices]
 """
 
+"""
 train_test_separator = int(0.8 * len(data))
 numpy.save('./data.npy', data[:train_test_separator])
 numpy.save('./test_data.npy', data[train_test_separator:])
 numpy.save('./labels.npy', labels[:train_test_separator])
 numpy.save('./test_labels.npy', labels[train_test_separator:])
+"""
+numpy.save('./data.npy', data)
+numpy.save('./labels.npy', labels)
