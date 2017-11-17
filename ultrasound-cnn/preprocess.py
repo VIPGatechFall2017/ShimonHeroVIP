@@ -3,7 +3,7 @@ import os
 from PIL import Image
 import scipy.misc
 
-SHAPE = (28, 28)
+SHAPE = (48, 48)
 
 data_dir = './data/'
 data = []
@@ -54,5 +54,8 @@ numpy.save('./test_data.npy', data[train_test_separator:])
 numpy.save('./labels.npy', labels[:train_test_separator])
 numpy.save('./test_labels.npy', labels[train_test_separator:])
 """
+shuffled_indices = numpy.random.permutation(len(data))
+data = [data[i] for i in shuffled_indices]
+labels = [labels[i] for i in shuffled_indices]
 numpy.save('./data.npy', data)
 numpy.save('./labels.npy', labels)
