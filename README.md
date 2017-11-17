@@ -115,3 +115,16 @@ In this model, an entire convolutional layer was removed to try to combat overfi
 ![model7-a](https://github.com/VIPGatechFall2017/ShimonHeroVIP/blob/Jared/results/Model%207%20-%20Analysis.jpg)
 
 Decreasing the number of filters from 24 to 8 in the convolutional layer also had little effect on overfitting. We will be looking into the cause of this overfitting using the data that we've gathered to try to pinpoint a cause. 
+
+## Followup : Data Shuffling
+Upon further investigation, it was discovered that the data was not properly shuffled before training the above networks. In order to test whether this was having an effect, Model 3 was retrained on shuffled data. The results can be seen below.
+
+![model3-shuffled](https://github.com/VIPGatechFall2017/ShimonHeroVIP/blob/Jared/results/model3-shuffled.jpg)
+
+This shows a clear improvement over the previous performance, indicating that the issue which was hindering performance was an issue with data, not an issue with overfitting/model complexity. This model trained relatively well. In order to test whether the testing accuracy issues could be entirely attributed to a lack of shuffling rather than overfitting, Model 2 was retrained on the new shuffled data. Model 2 is more complex than model 3 and takes an input of 48x48 patches. The results can be seen below.
+
+![model2-shuffled](https://github.com/VIPGatechFall2017/ShimonHeroVIP/blob/Jared/results/model2-shuffled.jpg)
+
+With model 2, up to 70% testing accuracy was acheived, with no significant signs of overfitting, despite the complexity of the network. One interesting fact is that toward the beginning of training, the testing accuracy is higher than the training accuracy. According to discussions on the tensorflow source, this can occur at the early stages of training when using dropout layers, which this network uses.
+
+Based on these results, we can conclude that the poor performance of the networks previously was due to not shuffling the data properly.
