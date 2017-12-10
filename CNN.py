@@ -1,7 +1,7 @@
 import numpy as np
 from data_processing import create_dataset
 from sklearn.metrics import accuracy_score
-
+#
 # constants
 directory_name = "image_data"
 num_imgs = 300

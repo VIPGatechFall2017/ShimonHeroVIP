@@ -3,7 +3,7 @@ from scipy.misc import imread
 from skimage.color import rgb2grey
 from skimage.transform import resize
 
-
+#
 # pass the name of the folder containing the image files into this function
 # along with the number of images as an integer, the images' 3D shape as a
 # tuple, the desired image shape after conversion to grayscale and downsampling
