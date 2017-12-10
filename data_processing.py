@@ -10,14 +10,15 @@ from skimage.transform import resize
 # and the name of the file containing the raw data to get a tuple of the
 # format (X_train, X_test, y_train, y_test)
 def create_dataset(directory_name, num_imgs, input_shape, resize_shape,
-                   test_data_filename):
+                   crop_amounts, test_data_filename):
     dataset = load_and_process_data(directory_name, num_imgs, input_shape,
-                                    resize_shape)
+                                    resize_shape, crop_amounts)
     test_data = load_and_process_test_data(test_data_filename)
     return make_training_and_testing_sets(dataset, num_imgs, test_data)
 
 
-def load_and_process_data(directory_name, num_imgs, input_shape, resize_shape):
+def load_and_process_data(directory_name, num_imgs, input_shape, resize_shape,
+                          crop_amounts):
     # create an empty array with an appropriate 4D shape for the input images
     dataset_shape = (num_imgs,) + input_shape
     dataset = np.zeros(shape=dataset_shape)
@@ -25,10 +26,21 @@ def load_and_process_data(directory_name, num_imgs, input_shape, resize_shape):
     # iterate over files in the image_data folder and load them, skipping
     # files that aren't images
     for i in range(0, num_imgs):
-        dataset[i] = imread("%s/hand.mov_%s.png" % (directory_name, i))
+        dataset[i] = imread("%s/frame%s.jpg" % (directory_name, i))
 
     # scale each entry in the dataset by 255 to get each value between 0 and 1
     dataset = dataset / 255
+
+    # crop the extra black space off of the sides of the images
+    new_dataset = np.zeros(shape=(num_imgs,) + (input_shape[0],
+                                                input_shape[1]
+                                                - crop_amounts[0]
+                                                - crop_amounts[2],
+                                                input_shape[2]))
+    for i in range(0, num_imgs):
+        new_dataset[i] = crop(dataset[i], 45, 0, 60, 0)
+
+    dataset = new_dataset
 
     # determine the new shape of the dataset in preparation for downsampling
     # the images, iterate over the images, converting to grayscale and
@@ -73,6 +85,12 @@ def convert_to_grayscale_and_downsample(image, resize_shape):
     return image
 
 
+def crop(image, left_off, top_off, right_off, bottom_off):
+    image = image[top_off:image.shape[0] - bottom_off,
+            left_off:image.shape[1] - right_off,]
+    return image
+
+
 def make_training_and_testing_sets(dataset, num_imgs, test_data):
     # produce arrays made up of approx. 80% of the input and approx. 20% of the
     # input, respectively
@@ -88,14 +106,15 @@ def make_training_and_testing_sets(dataset, num_imgs, test_data):
     return (X_train, X_test, y_train, y_test)
 
 # for testing
-#
-# directory_name = "image_data"
-# num_imgs = 150
-# input_shape = (360, 360, 3)
-# resize_shape = (28, 28)
-# test_data_filename = "data.txt"
-#
-#
-# (X_train, X_test, y_train, y_test) = create_dataset(directory_name, num_imgs,
-#                                                     input_shape, resize_shape,
-#                                                     test_data_filename)
+directory_name = "image_data/1/hand-images"
+num_imgs = 5
+input_shape = (740, 600, 3)
+resize_shape = (28, 28)
+crop_amounts = (45, 0, 60, 0) # left, top, right, bottom
+test_data_filename = "data.txt"
+
+
+(X_train, X_test, y_train, y_test) = create_dataset(directory_name, num_imgs,
+                                                    input_shape, resize_shape,
+                                                    crop_amounts,
+                                                    test_data_filename)
