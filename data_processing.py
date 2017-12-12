@@ -14,9 +14,11 @@ def create_dataset(directory_name, file_name, num_imgs, input_shape,
     dataset = load_and_process_data(directory_name, file_name, num_imgs,
                                     input_shape, resize_shape, crop_amounts)
     test_data = load_and_process_test_data(test_data_filename)
-    return make_training_and_testing_sets(dataset, num_imgs, test_data)
+    return make_training_and_testing_sets(dataset, num_imgs, test_data,
+                                          resize_shape)
 
-
+# loads the images one at a time, performing any preprocessing and then adding
+# them to the returned dataset
 def load_and_process_data(directory_name, file_name, num_imgs, input_shape,
                           resize_shape, crop_amounts):
     # create an empty array with an appropriate 4D shape for the input images
@@ -29,8 +31,7 @@ def load_and_process_data(directory_name, file_name, num_imgs, input_shape,
         image = imread("%s/%s%s.jpg" % (directory_name, file_name, i))
 
         # crop the extra black space off of the sides of the image
-        image = crop(image, crop_amounts[0], crop_amounts[1], crop_amounts[2],
-                     crop_amounts[3])
+        image = crop(image, crop_amounts)
 
         # downsample the image and convert to grayscale
         image = convert_to_grayscale_and_downsample(image, resize_shape)
@@ -67,6 +68,7 @@ def load_and_process_test_data(test_data_filename):
         processed_line = processed_line + open_hand
         test_data.append(processed_line)
 
+    # convert to a numpy array
     test_data = np.asarray(test_data)
 
     return test_data
@@ -77,15 +79,14 @@ def convert_to_grayscale_and_downsample(image, resize_shape):
     image = resize(image, resize_shape, preserve_range=True)
     return image
 
-
-def crop(image, left_off, top_off, right_off, bottom_off):
-    image = image[top_off:image.shape[0] - bottom_off,
-            left_off:image.shape[1] - right_off, ]
+# crops the amounts passed in off of each of the sides of the image passed in
+def crop(image, crop_amounts):
+    image = image[crop_amounts[1]:image.shape[0] - crop_amounts[3],
+            crop_amounts[0]:image.shape[1] - crop_amounts[2], ]
     return image
 
-
-def make_training_and_testing_sets(dataset, num_imgs, test_data):
-    # shuffle the training and testing sets in unison
+# shuffles the training and testing sets in unison and returns them in a tuple
+def make_training_and_testing_sets(dataset, num_imgs, test_data, resize_shape):
     images_shuffled = np.zeros(dataset.shape)
     test_data_shuffled = np.zeros(test_data.shape)
     indices = range(num_imgs)
@@ -93,20 +94,27 @@ def make_training_and_testing_sets(dataset, num_imgs, test_data):
     for i in indices:
         images_shuffled[i] = dataset[i]
         test_data_shuffled[i] = test_data[i]
+
+    # reshapes the image array to have 4 dimensions so that the first Conv2D
+    # layer will accept it
+    images_shuffled = images_shuffled.reshape((num_imgs, resize_shape[0],
+                                               resize_shape[1], 1))
+
     return (images_shuffled, test_data_shuffled)
 
 
 # for testing
-directory_name = "image_data/1/hand-images"
-file_name = "frame"  # whatever text comes before the number in the names of the
-# image files (assumes files are jpg)
-num_imgs = 5
-input_shape = (740, 600, 3)
-resize_shape = (40, 40)
-crop_amounts = (45, 0, 60, 0)  # left, top, right, bottom
-test_data_filename = "data.txt"
-
-(images, test_data) = create_dataset(directory_name, file_name,
-                                                    num_imgs, input_shape,
-                                                    resize_shape, crop_amounts,
-                                                    test_data_filename)
+# directory_name = "image_data/1/hand-images"
+# file_name = "frame"  # whatever text comes before the number in the names of
+# the image files (assumes files are jpg)
+# num_imgs = 5
+# input_shape = (740, 600, 3)
+# resize_shape = (40, 40)
+# crop_amounts = (45, 0, 60, 0)  # left, top, right, bottom
+# test_data_filename = "data.txt"
+#
+# (images, test_data) = create_dataset(directory_name, file_name,
+#                                                     num_imgs, input_shape,
+#                                                     resize_shape,
+#                                                     crop_amounts,
+#                                                     test_data_filename)

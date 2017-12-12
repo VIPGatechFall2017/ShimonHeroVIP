@@ -1,10 +1,8 @@
 from data_processing import create_dataset
 from keras.models import Sequential
-from keras.layers import Dense
-from keras.layers import Dropout
-from keras.layers import Flatten
-from keras.layers.convolutional import Conv2D
-from keras.layers.convolutional import MaxPooling2D
+from keras.layers import Dense, Dropout, Flatten
+from keras.layers.convolutional import Conv2D, MaxPooling2D
+
 
 # constants
 directory_name = "image_data/1/hand-images"
@@ -23,7 +21,6 @@ num_classes = 6
                                                     resize_shape, crop_amounts,
                                                     test_data_filename)
 
-images = images.reshape((num_imgs, resize_shape[0], resize_shape[1], 1))
 
 def build_model():
     model = Sequential()
@@ -44,7 +41,9 @@ def build_model():
                   metrics=["accuracy"])
     return model
 
+
 model = build_model()
+
 
 model.fit(images, test_data, validation_split=0.2, epochs=200, batch_size=200,
           verbose=2)
