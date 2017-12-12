@@ -13,7 +13,7 @@ def create_dataset(directory_name, file_name, num_imgs, input_shape,
                    resize_shape, crop_amounts, test_data_filename):
     dataset = load_and_process_data(directory_name, file_name, num_imgs,
                                     input_shape, resize_shape, crop_amounts)
-    test_data = load_and_process_test_data(test_data_filename)
+    test_data = load_and_process_test_data(directory_name, test_data_filename)
     return make_training_and_testing_sets(dataset, num_imgs, test_data,
                                           resize_shape)
 
@@ -42,10 +42,10 @@ def load_and_process_data(directory_name, file_name, num_imgs, input_shape,
     return dataset
 
 
-def load_and_process_test_data(test_data_filename):
+def load_and_process_test_data(directory_name, test_data_filename):
     # open the file containing the data and create an empty list to hold the
     # data
-    file = open(test_data_filename, "r")
+    file = open("%s/%s" % (directory_name, test_data_filename), "r")
     test_data = []
 
     # iterate over the lines in the file, removing unnecessary characters and
