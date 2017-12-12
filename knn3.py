@@ -1,6 +1,7 @@
 import numpy as np
 from process3 import create_dataset
 from sklearn.metrics import accuracy_score
+from sklearn.metrics import jaccard_similarity_score
 
 
 def train(X_train, y_train):
@@ -73,7 +74,7 @@ def main():
 
         knn(X_train, y_train, X_test, predictions, k)
         predictions = np.asarray(predictions)
-        accuracy = accuracy_score(y_test, predictions)
+        accuracy = jaccard_similarity_score(y_test,predictions)
         print("\nThe accuracy of our classifier is {0}%".format(accuracy*100))
         print("\n\n\n\n\n\n\n\n\n\n\n\n\n")
 
