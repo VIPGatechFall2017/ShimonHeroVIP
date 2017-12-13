@@ -104,7 +104,7 @@ def make_training_and_testing_sets(dataset, num_imgs, test_data, resize_shape):
 
 
 # for testing
-# directory_name = "image_data/1/hand-images"
+# image_directory_name = "image_data/1/hand-images"
 # file_name = "frame"  # whatever text comes before the number in the names of
 # the image files (assumes files are jpg)
 # num_imgs = 5

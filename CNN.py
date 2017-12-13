@@ -30,9 +30,6 @@ def build_model():
     model.add(Conv2D(8, (4, 4), activation="relu"))
     model.add(MaxPooling2D(pool_size=(2, 2)))
     model.add(Dropout(.1))
-    model.add(Conv2D(4, (3, 3), activation="relu"))
-    model.add(MaxPooling2D(pool_size=(2, 2)))
-    model.add(Dropout(.1))
     model.add(Flatten())
     model.add(Dense(64, activation="relu"))
     model.add(Dense(32, activation="relu"))
@@ -45,5 +42,5 @@ def build_model():
 model = build_model()
 
 
-model.fit(images, test_data, validation_split=0.2, epochs=200, batch_size=200,
+model.fit(images, test_data, validation_split=0.2, epochs=200, batch_size=250,
           verbose=2)
